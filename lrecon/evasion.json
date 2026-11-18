@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "note": "STATIC indicators only: these are literals found in the file (strings, import names), never runtime evidence. A hit says the artifact carries a marker, not that the marker is reachable or active. No execution, no network.",
+  "families": [
+    {
+      "family": "debugger-detect",
+      "rules": [
+        {"id": "isdebuggerpresent", "str": "IsDebuggerPresent"},
+        {"id": "ntqueryinformationprocess", "str": "NtQueryInformationProcess"},
+        {"id": "pt-deny-attach", "str": "PT_DENY_ATTACH"},
+        {"id": "p-traced", "str": "P_TRACED"},
+        {"id": "ptrace-traceme", "str": "PTRACE_TRACEME"},
+        {"id": "ptrace-request", "regex": "ptrace\\s*\\(\\s*PTRACE_TRACEME"},
+        {"id": "sysctl-kern-proc-pid", "str": "kern.proc.pid"}
+      ]
+    },
+    {
+      "family": "vm-detect",
+      "rules": [
+        {"id": "vmware", "str": "VMware"},
+        {"id": "vmware-log", "str": "vmware.log"},
+        {"id": "vbox", "str": "VBox"},
+        {"id": "qemu", "str": "Qemu"},
+        {"id": "qemu-lower", "str": "qemu"},
+        {"id": "xen", "str": "Xen", "not": ["XenForo", "xenial", "XenServer", "XenApp"]},
+        {"id": "proc-xen", "str": "/proc/xen"}
+      ]
+    },
+    {
+      "family": "sandbox-detect",
+      "rules": [
+        {"id": "sandboxie", "str": "Sandboxie"},
+        {"id": "sbie-dll", "str": "SbieDll.dll"},
+        {"id": "blocklist-api-log", "str": "api_log.dll"},
+        {"id": "blocklist-dir-watch", "str": "dir_watch.dll"},
+        {"id": "blocklist-pstorec", "str": "pstorec.dll"},
+        {"id": "blocklist-vmcheck", "str": "vmcheck.dll"},
+        {"id": "blocklist-wpespy", "str": "wpespy.dll"},
+        {"id": "qemu-ga", "str": "qemu-ga"}
+      ]
+    },
+    {
+      "family": "anti-timing",
+      "rules": [
+        {"id": "queryperformancecounter", "str": "QueryPerformanceCounter"},
+        {"id": "rdtsc", "str": "rdtsc"},
+        {"id": "mach-absolute-time", "str": "mach_absolute_time"}
+      ]
+    },
+    {
+      "family": "remote-debug-attach",
+      "rules": [
+        {"id": "node-inspect", "str": "--inspect"},
+        {"id": "cdp-localhost-9222", "str": "localhost:9222"},
+        {"id": "cdp-127-9222", "str": "127.0.0.1:9222"},
+        {"id": "cdp-localhost-23456", "str": "localhost:23456"},
+        {"id": "jdwp", "str": "jdwp"}
+      ]
+    },
+    {
+      "family": "synthetic-trace",
+      "rules": [
+        {"id": "ld-preload", "str": "LD_PRELOAD"},
+        {"id": "dyld-insert-libraries", "str": "DYLD_INSERT_LIBRARIES"},
+        {"id": "frida", "str": "frida"},
+        {"id": "frida-gadget", "str": "frida-gadget"}
+      ]
+    }
+  ]
+}

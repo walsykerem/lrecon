@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "note": "Fixed-literal language markers, matched as bytes, never decoded. A hit is one mechanism and is not a language claim: settleLanguage pairs it with a symbol mangling family on disjoint ranges and emit decides. corpus names the artifact the literal was read from; buildSigpack refuses a missing or weak atom, and 26 of 35 rules carry no corpus yet, so their literals are previewed but unverified - treat those as leads, not evidence. DIE db markers (db/*/_*.sg, MIT) informed the C++/Delphi families; no ClamAV GPL data is embedded.",
+  "rules": [
+    {
+      "id": "go.buildinfo",
+      "lang": "go",
+      "str": "ÿ Go buildinf:",
+      "at": "any",
+      "corpus": "go1.22 toolchain binaries"
+    },
+    {
+      "id": "go.morestack",
+      "lang": "go",
+      "str": "runtime.morestack",
+      "at": "any",
+      "corpus": "Go binaries in /usr/local/bin"
+    },
+    {
+      "id": "go.gopath",
+      "lang": "go",
+      "str": "golang.org/",
+      "at": "any",
+      "corpus": "Go module path prefixes"
+    },
+    {
+      "id": "go.pclntab",
+      "lang": "go",
+      "str": "runtime.pclntab",
+      "at": "any"
+    },
+    {
+      "id": "go.typeassert",
+      "lang": "go",
+      "str": "runtime.typeassert",
+      "at": "any"
+    },
+    {
+      "id": "cpp.itanium.stdtree",
+      "lang": "c++",
+      "str": "_ZSt",
+      "at": "any",
+      "not": [
+        "core::panicking"
+      ],
+      "corpus": "Itanium std symbols in /usr/bin"
+    },
+    {
+      "id": "cpp.itanium.cxa",
+      "lang": "c++",
+      "str": "__cxa_th",
+      "at": "any",
+      "not": [
+        "core::panicking"
+      ],
+      "corpus": "Itanium runtime hooks in /usr/bin"
+    },
+    {
+      "id": "cpp.itanium.vtable",
+      "lang": "c++",
+      "str": "_ZTV",
+      "at": "any",
+      "not": [
+        "core::panicking"
+      ]
+    },
+    {
+      "id": "cpp.libstdcxx",
+      "lang": "c++",
+      "str": "libstdc++.so",
+      "at": "any",
+      "not": [
+        "core::panicking"
+      ]
+    },
+    {
+      "id": "cpp.glibcxxabi",
+      "lang": "c++",
+      "str": "GLIBCXX_3.",
+      "at": "any",
+      "not": [
+        "core::panicking"
+      ]
+    },
+    {
+      "id": "cpp.msvcrt",
+      "lang": "c++",
+      "str": "MSVCR",
+      "at": "any",
+      "not": [
+        "GLIBCXX_3."
+      ]
+    },
+    {
+      "id": "rust.corepanic",
+      "lang": "rust",
+      "str": "core::panicking",
+      "at": "any",
+      "not": [
+        "_ZSt"
+      ]
+    },
+    {
+      "id": "rust.beginunwind",
+      "lang": "rust",
+      "str": "rust_begin_unwind",
+      "at": "any",
+      "not": [
+        "_ZSt"
+      ]
+    },
+    {
+      "id": "rust.stdpath",
+      "lang": "rust",
+      "str": "library/std/src",
+      "at": "any",
+      "not": [
+        "_ZSt"
+      ]
+    },
+    {
+      "id": "rust.registry",
+      "lang": "rust",
+      "str": "cargo/registry",
+      "at": "any",
+      "not": [
+        "_ZSt"
+      ]
+    },
+    {
+      "id": "rust.personality",
+      "lang": "rust",
+      "str": "__rust_eh_personality",
+      "at": "any",
+      "not": [
+        "_ZSt"
+      ]
+    },
+    {
+      "id": "swift.core",
+      "lang": "swift",
+      "str": "libswiftCore",
+      "at": "any",
+      "corpus": "macOS /usr/lib/swift dylibs"
+    },
+    {
+      "id": "swift.alloc",
+      "lang": "swift",
+      "str": "swift_allocObject",
+      "at": "any",
+      "corpus": "Swift runtime entry points"
+    },
+    {
+      "id": "swift.string",
+      "lang": "swift",
+      "str": "Swift.String",
+      "at": "any"
+    },
+    {
+      "id": "swift.typedesc",
+      "lang": "swift",
+      "str": "swift_getTypeByMangledNameInContext",
+      "at": "any"
+    },
+    {
+      "id": "swift.concurrency",
+      "lang": "swift",
+      "str": "libswift_Concurrency",
+      "at": "any"
+    },
+    {
+      "id": "zig.start",
+      "lang": "zig",
+      "str": "start.zig",
+      "at": "any",
+      "not": [
+        "__rust_eh_personality"
+      ]
+    },
+    {
+      "id": "zig.defaultpanic",
+      "lang": "zig",
+      "str": "builtin.default_panic",
+      "at": "any",
+      "not": [
+        "__rust_eh_personality"
+      ]
+    },
+    {
+      "id": "zig.stdpath",
+      "lang": "zig",
+      "str": "lib/std/",
+      "at": "any",
+      "not": [
+        "__rust_eh_personality"
+      ]
+    },
+    {
+      "id": "zig.unreachable",
+      "lang": "zig",
+      "str": "reached unreachable code",
+      "at": "any",
+      "not": [
+        "__rust_eh_personality"
+      ]
+    },
+    {
+      "id": "zig.bare",
+      "lang": "zig",
+      "str": "ziglang",
+      "at": "any",
+      "not": [
+        "__rust_eh_personality"
+      ]
+    },
+    {
+      "id": "delphi.systemunit",
+      "lang": "delphi",
+      "str": "System.pas",
+      "at": "any"
+    },
+    {
+      "id": "delphi.tobject",
+      "lang": "delphi",
+      "str": "TObject",
+      "at": "any"
+    },
+    {
+      "id": "delphi.embarcadero",
+      "lang": "delphi",
+      "str": "Embarcadero",
+      "at": "any"
+    },
+    {
+      "id": "beam.for1",
+      "lang": "erlang",
+      "str": "FOR1",
+      "at": "0"
+    },
+    {
+      "id": "beam.erts",
+      "lang": "erlang",
+      "str": "erts_",
+      "at": "any"
+    },
+    {
+      "id": "lua.chunk",
+      "lang": "lua",
+      "hex": "1b4c7561",
+      "at": "0",
+      "corpus": "PUC Lua binary chunk signature, ESC Lua"
+    },
+    {
+      "id": "lua.pcall",
+      "lang": "lua",
+      "str": "lua_pcall",
+      "at": "any"
+    },
+    {
+      "id": "evm.prologue",
+      "lang": "evm",
+      "hex": "6080604052",
+      "at": "0",
+      "corpus": "solc runtime prologue, first 5 bytes"
+    },
+    {
+      "id": "evm.solcmeta",
+      "lang": "evm",
+      "hex": "6469706673",
+      "at": "any",
+      "corpus": "solc CBOR metadata map key: 0x64 (CBOR text of length 4) then \"ipfs\"; a bare \"ipfs\" is a common substring in unrelated binaries"
+    }
+  ]
+}

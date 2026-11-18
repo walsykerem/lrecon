@@ -1,0 +1,31 @@
+{
+  "name": "lrecon",
+  "version": "1.0.0",
+  "description": "Bytes-only reverse engineering in one Go binary: 235 ops on native, APK/IPA, wasm, .NET, JS and firmware artifacts. Reads the file, never runs it.",
+  "bin": {
+    "lrecon": "lrecon.js"
+  },
+  "files": [
+    "lrecon.js",
+    "bin/"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/walsykerem/lrecon.git"
+  },
+  "keywords": [
+    "reverse-engineering",
+    "static-analysis",
+    "binary-analysis",
+    "macho",
+    "elf",
+    "pe",
+    "apk",
+    "webassembly"
+  ],
+  "license": "MIT",
+  "author": "Kerem Urhan"
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "name": "ook-433",
+    "family": "ASK/OOK",
+    "modulation": "OOK",
+    "symbol_rate": 2000,
+    "channel": "433.92MHz"
+  },
+  {
+    "name": "ask-generic",
+    "family": "ASK/OOK",
+    "modulation": "ASK",
+    "symbol_rate": 1000,
+    "channel": "315MHz"
+  },
+  {
+    "name": "fsk-narrow",
+    "family": "FSK",
+    "modulation": "2FSK",
+    "symbol_rate": 4800,
+    "channel": "868MHz"
+  },
+  {
+    "name": "gfsk-ble",
+    "family": "FSK",
+    "modulation": "GFSK",
+    "symbol_rate": 1000000,
+    "channel": "2402MHz"
+  }
+]
