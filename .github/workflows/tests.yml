@@ -1,0 +1,22 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Run CI-safe tests
+        run: |
+          cp test/*_test.go lrecon/
+          go test ./lrecon -count=1 -timeout 5m -run '^(TestAllocCeil|TestNoUnboundedMake|TestBundleExecutableReadsInfoPlist|TestClassify|TestCLIConflict|TestCompress|TestConstScanSharedIVLabel|TestScanConstants|TestSetConstants|TestJITToken|TestJITValue|TestNamesValue|TestNativeELFConstants|TestNativePEConstantsHonest|TestScanSectionWindows|TestUnknownTargetSaysNotScanned|TestTextExportsZeroVisible|TestDigestSymbolsJSON|TestDeepNote|TestEverySkipLiteralIsRegistered|TestReasonOutsideReaderSetRefused|TestEveryReaderHasOwnReasonSet|TestUnregisteredReasonRefused|TestV8Cache|TestProbeRefuses|TestProbeMaxBytesCutsDigest|TestDiffExitCodes|TestHashTarget|TestKindSetIsClosed|TestDecline|TestStateConflictEnvelope|TestFormatRefusalKeepsMissingPath|TestDeadlineKillIsTimeout|TestWrongFormatTargetIsBadArg|TestRefusal|TestFailureDiscoveryRemedy|TestDigestAbsenceContract|TestRepeatFlag|TestKeyedArchive|TestInspectPlistDedupes|TestEVMSelectorScanSkipsPushData|TestEVMHexAcceptsLineBreaks|TestEmit|TestLanguageNeeds2Witness|TestConflictKeepsBoth|TestPremiseAborts|TestSlotUnsupported|TestLua|TestOpcacheDigest|TestPharDigest|TestPB|TestDex|TestListJebUnitsRefusesWhenEveryInputFails)'
