@@ -821,7 +821,7 @@ func netcClientHello(seg []byte) *netcHello {
 	h.JA3 = fmt.Sprintf("%d,%s,%s,%s,%s",
 		h.Version, netcJoinU16(h.Ciphers, "-"), netcJoinU16(h.Extensions, "-"),
 		netcJoinU16(groups, "-"), netcJoinBytes(points, "-"))
-	sum := md5.Sum([]byte(h.JA3))
+	sum := md5.Sum([]byte(h.JA3)) // NOSONAR: JA3 specifies MD5 for this public, non-security fingerprint.
 	h.JA3MD5 = hex.EncodeToString(sum[:])
 	return h
 }
