@@ -39,7 +39,11 @@ func termGroup(pgid int) {
 	if pgid <= 0 {
 		return
 	}
-	exec.Command("taskkill", "/T", "/PID", strconv.Itoa(pgid)).Run()
+	taskkill, err := exec.LookPath("taskkill")
+	if err != nil {
+		return
+	}
+	exec.Command(taskkill, "/T", "/PID", strconv.Itoa(pgid)).Run()
 }
 
 func groupAlive(pgid int) bool { return pidAlive(pgid) }
