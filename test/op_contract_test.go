@@ -113,12 +113,7 @@ func TestOpMapResultExit0(t *testing.T) {
 
 // A route G item on the happy path: the moved declines must not swallow it.
 func TestOpGhidraResultExit0(t *testing.T) {
-	if _, _, err := findGhidra(); err != nil {
-		t.Skip("ghidra analyzeHeadless not installed")
-	}
-	// The 50 s default would turn a cold import into a timeout envelope; this
-	// test is about the happy path, so it pays for the import.
-	t.Setenv("LRECON_GHIDRA_TIMEOUT", "300s")
+	requireRealGhidra(t)
 	stdout, stderr, code := runCLIAll(t, "--op", "list_segments", "/bin/ls")
 	if code != 0 {
 		t.Fatalf("exit %d, want 0; stderr:\n%s", code, stderr)
