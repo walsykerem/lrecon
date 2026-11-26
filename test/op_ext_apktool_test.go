@@ -59,8 +59,16 @@ func TestApktoolFixtureIsBinaryAPK(t *testing.T) {
 // TestApktoolDecodeFixture runs the decode items against the fixture with the
 // machine's apktool and requires a decoded tree, not a refusal.
 func TestApktoolDecodeFixture(t *testing.T) {
-	if _, err := exec.LookPath("apktool"); err != nil {
-		t.Skip("apktool not installed")
+	if os.Getenv("CI") != "" {
+		t.Skip("real apktool/Java decode is machine-dependent: skipped in CI")
+	}
+	if os.Getenv("LRECON_OPS_APKTOOL") != "1" {
+		t.Skip("real apktool decode is opt-in: set LRECON_OPS_APKTOOL=1 locally")
+	}
+	for _, tool := range []string{"apktool", "java"} {
+		if _, err := exec.LookPath(tool); err != nil {
+			t.Skip(tool + " not installed")
+		}
 	}
 	frame := filepath.Join(t.TempDir(), "frame")
 	prev := opOutput
