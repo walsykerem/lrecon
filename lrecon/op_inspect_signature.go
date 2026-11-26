@@ -261,7 +261,7 @@ func csString(b []byte, off uint32) (string, bool) {
 func csHashFor(typ uint8) func([]byte) []byte {
 	switch typ {
 	case 1:
-		return func(b []byte) []byte { s := sha1.Sum(b); return s[:] }
+		return func(b []byte) []byte { s := sha1.Sum(b); return s[:] } // NOSONAR Apple CodeDirectory hash type 1 mandates SHA-1; recomputation must match the signed on-disk digest.
 	case 2:
 		return func(b []byte) []byte { s := sha256.Sum256(b); return s[:] }
 	case 3:
