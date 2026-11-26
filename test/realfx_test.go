@@ -15,6 +15,13 @@ import (
 	"time"
 )
 
+func realFxCI(t *testing.T) {
+	t.Helper()
+	if os.Getenv("CI") != "" && os.Getenv("LRECON_REALFX") != "1" {
+		t.Skip("RealFx: host-dependent, skipped on CI (set LRECON_REALFX=1 to run)")
+	}
+}
+
 func realFxLook(t *testing.T, names ...string) string {
 	t.Helper()
 	for _, n := range names {
@@ -60,6 +67,7 @@ func realFxFind(t *testing.T, root, suffix string, budget time.Duration) (string
 // TestRealFxOpcache compiles a script with PHP's file cache enabled and probes
 // the cache entry PHP wrote.
 func TestRealFxOpcache(t *testing.T) {
+	realFxCI(t)
 	php := realFxLook(t, "php")
 	dir := t.TempDir()
 	cache := filepath.Join(dir, "cache")
@@ -135,6 +143,7 @@ func TestRealFxOpcache(t *testing.T) {
 // TestRealFxBun compiles a script with `bun build --compile` and probes the
 // Mach-O __BUN carrier Bun 1.4.0 writes.
 func TestRealFxBun(t *testing.T) {
+	realFxCI(t)
 	bun := realFxLook(t, "bun")
 	dir := t.TempDir()
 	if err := os.WriteFile(filepath.Join(dir, "s.js"), []byte("console.log(\"hi\");\n"), 0o644); err != nil {
@@ -186,6 +195,7 @@ func TestRealFxBun(t *testing.T) {
 
 // TestRealFxKlib searches the Kotlin/Gradle caches for a genuine .klib.
 func TestRealFxKlib(t *testing.T) {
+	realFxCI(t)
 	home, err := os.UserHomeDir()
 	if err != nil {
 		t.Skipf("RealFx: no home dir: %v", err)
