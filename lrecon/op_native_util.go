@@ -25,6 +25,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -762,6 +763,11 @@ type nativeSession struct {
 
 var errNoSession = errors.New("no session")
 
+var (
+	tempSessionOnce sync.Once
+	tempSessionPath string
+)
+
 func sessionPath() string {
 	if p := strings.TrimSpace(os.Getenv("LRECON_SESSION")); p != "" {
 		return p
@@ -776,7 +782,22 @@ func sessionPath() string {
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return filepath.Join(os.TempDir(), "lrecon-session.json")
+		// No home: allocate an unpredictable 0600 path once so a local user
+		// cannot pre-create the session file in the shared temp dir. Remove the
+		// placeholder: no session exists until a navigation op saves one.
+		tempSessionOnce.Do(func() {
+			f, err := os.CreateTemp("", "lrecon-session-*.json")
+			if err != nil {
+				return
+			}
+			tempSessionPath = f.Name()
+			f.Close()
+			os.Remove(tempSessionPath)
+		})
+		if tempSessionPath != "" {
+			return tempSessionPath
+		}
+		return ".lrecon-session.json"
 	}
 	return filepath.Join(home, ".lrecon", "session.json")
 }
