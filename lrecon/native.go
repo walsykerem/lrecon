@@ -1443,7 +1443,11 @@ func isGoBinary(path string) bool {
 func objdumpViaPclntab(path, symbol string) (string, error) {
 	ctx, cancel := rtCtx()
 	defer cancel()
-	cmd := exec.CommandContext(ctx, "go", "tool", "objdump", "-s", symbol, path)
+	goBin, err := exec.LookPath("go")
+	if err != nil {
+		return "", fmt.Errorf("go tool not found: %w", err)
+	}
+	cmd := exec.CommandContext(ctx, goBin, "tool", "objdump", "-s", symbol, path)
 	var stderr strings.Builder
 	cmd.Stderr = &stderr
 	out, err := cmd.Output()
