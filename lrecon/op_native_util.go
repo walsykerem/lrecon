@@ -782,17 +782,15 @@ func sessionPath() string {
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
-		// No home: allocate an unpredictable 0600 path once so a local user
-		// cannot pre-create the session file in the shared temp dir. Remove the
-		// placeholder: no session exists until a navigation op saves one.
+		// No home: keep the session inside a process-owned directory. MkdirTemp
+		// creates it 0700 with an unpredictable name, so a local user cannot
+		// pre-create or symlink the session file in the shared temp dir.
 		tempSessionOnce.Do(func() {
-			f, err := os.CreateTemp("", "lrecon-session-*.json")
+			dir, err := os.MkdirTemp("", "lrecon-session-")
 			if err != nil {
 				return
 			}
-			tempSessionPath = f.Name()
-			f.Close()
-			os.Remove(tempSessionPath)
+			tempSessionPath = filepath.Join(dir, "session.json")
 		})
 		if tempSessionPath != "" {
 			return tempSessionPath
@@ -1931,6 +1929,37 @@ func nativeHexDump(b []byte) string {
 		end := min(i+16, len(b))
 		fmt.Fprintf(&sb, "%08x  ", i)
 		for j := i; j < i+16; j++ {
+			if j < end {
+				fmt.Fprintf(&sb, "%02x ", b[j])
+			} else {
+				sb.WriteString("   ")
+			}
+		}
+		sb.WriteString(" |")
+		for j := i; j < end; j++ {
+			if nativePrintable(b[j]) {
+				sb.WriteByte(b[j])
+			} else {
+				sb.WriteByte('.')
+			}
+		}
+		sb.WriteString("|\n")
+	}
+	return sb.String()
+}
+
+func nativeASCII(b []byte) string {
+	var sb strings.Builder
+	for _, c := range b {
+		if nativePrintable(c) {
+			sb.WriteByte(c)
+		} else {
+			sb.WriteByte('.')
+		}
+	}
+	return sb.String()
+}
+ j++ {
 			if j < end {
 				fmt.Fprintf(&sb, "%02x ", b[j])
 			} else {
