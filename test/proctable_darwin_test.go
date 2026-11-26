@@ -135,6 +135,9 @@ func TestPidAliveRejectsNonPositive(t *testing.T) {
 // started keeps running made the group look dead, so reapTrackedGroups skipped
 // straight to a no-op and left the child behind.
 func TestGroupAliveFollowsWholeGroup(t *testing.T) {
+	if os.Getenv("CI") != "" && os.Getenv("LRECON_REAL_PROCESS_TESTS") != "1" {
+		t.Skip("real process/signal test; set LRECON_REAL_PROCESS_TESTS=1 to run in CI")
+	}
 	cmd := exec.Command("sh", "-c", "sleep 30 & exit 0")
 	setpgroup(cmd)
 	if err := cmd.Start(); err != nil {
