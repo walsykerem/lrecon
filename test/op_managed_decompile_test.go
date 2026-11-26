@@ -8,7 +8,8 @@ package main
 // The CIL test builds a real assembly with the local .NET SDK instead of
 // hand-writing a PE: a synthetic image would prove nothing about a real
 // compiler's headers, tokens and string heap. When the toolchain is missing the
-// test skips, it does not pass.
+// test skips, it does not pass. It also skips in CI and unless opted in locally
+// (LRECON_OPS_DOTNET=1): the build can restore from the network.
 
 import (
 	"context"
@@ -93,6 +94,12 @@ func TestDecompileAllNativeAbsentGhidra(t *testing.T) {
 // real managed image, and a fabricated PE would not be a check at all.
 func cilDotnet(t *testing.T) string {
 	t.Helper()
+	if os.Getenv("CI") != "" {
+		t.Skip("real dotnet build is not hermetic: skipped in CI")
+	}
+	if os.Getenv("LRECON_OPS_DOTNET") != "1" {
+		t.Skip("real dotnet build is opt-in: set LRECON_OPS_DOTNET=1 locally")
+	}
 	for _, p := range []string{"/usr/local/share/dotnet/dotnet", "/usr/share/dotnet/dotnet"} {
 		if st, err := os.Stat(p); err == nil && !st.IsDir() {
 			return p
