@@ -272,9 +272,6 @@ func TestR2L08FormatCoverageInventoryAndSqliteVirtualTables(t *testing.T) {
 }
 
 func TestR2L08FixturePcapRegeneratesByteForByte(t *testing.T) {
-	if os.Getenv("CI") != "" {
-		t.Skip("CI: external python3 fixture regeneration is not part of this suite")
-	}
 	python, err := exec.LookPath("python3")
 	if err != nil {
 		t.Skip("python3 not installed: the fixture generator cannot be re-run here")
@@ -595,6 +592,10 @@ func TestR2L08ImportManagedReconstructionConflict(t *testing.T) {
 	r2l08MustOp(t, "import_managed_reconstruction", r2l08Job(t, map[string]any{"file": pe, "state": state}))
 	other := writeTemp(t, "other.dll", append(metaReadFile(t, pe), '\n'))
 	if _, err := runOp("import_managed_reconstruction", r2l08Job(t, map[string]any{"file": other, "state": state})); err == nil || !strings.Contains(err.Error(), "state conflict") {
+		t.Fatalf("different artifact into populated tree = %v", err)
+	}
+}
+te conflict") {
 		t.Fatalf("different artifact into populated tree = %v", err)
 	}
 }
