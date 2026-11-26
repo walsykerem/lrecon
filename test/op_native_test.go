@@ -187,15 +187,7 @@ func TestOpNativeGhidraAbsent(t *testing.T) {
 }
 
 func TestOpNativeGhidraRealImport(t *testing.T) {
-	if testing.Short() {
-		t.Skip("real ghidra import")
-	}
-	if _, _, err := findGhidra(); err != nil {
-		t.Skip("ghidra analyzeHeadless not installed")
-	}
-	// A real import is the case the 50 s default refuses to gamble on: the
-	// budget must outlast it or the test asserts on a timeout envelope.
-	t.Setenv("LRECON_GHIDRA_TIMEOUT", "300s")
+	requireRealGhidra(t)
 	res, err := ops["list_segments"].run("/usr/bin/true")
 	if err != nil {
 		t.Fatalf("list_segments on /usr/bin/true: %v", err)

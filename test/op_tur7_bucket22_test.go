@@ -196,13 +196,11 @@ func tur22CallTargets(ins []tur22Insn) map[uint64]bool {
 }
 
 func TestTur7Bucket22ProcedureGraph(t *testing.T) {
+	requireRealGhidra(t)
 	fixture, err := filepath.Abs(tur22Fixture)
 	if err != nil {
 		t.Fatalf("fixture path: %v", err)
 	}
-	// A cold import is a legitimate run, not a failure of the tool: give the
-	// documented budget room and assert content, never duration.
-	t.Setenv("LRECON_GHIDRA_TIMEOUT", "300s")
 
 	// 1. procedure_info: the name and the address are two ways to ask about one
 	//    procedure, and the answer has to be the same one either way — the entry
