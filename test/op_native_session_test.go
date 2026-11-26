@@ -167,6 +167,25 @@ func TestSessionPathHonorsStateDir(t *testing.T) {
 	}
 }
 
+func TestSessionPathWithoutHomeUsesPrivateTempFile(t *testing.T) {
+	t.Setenv("LRECON_SESSION", "")
+	t.Setenv("LRECON_STATE", "")
+	t.Setenv("HOME", "")
+	p := sessionPath()
+	if p == "" || !filepath.IsAbs(p) {
+		t.Fatalf("sessionPath() = %q, want an absolute temp path", p)
+	}
+	if p == filepath.Join(os.TempDir(), "lrecon-session.json") {
+		t.Fatalf("sessionPath() = %q, still predictable", p)
+	}
+	if got := sessionPath(); got != p {
+		t.Fatalf("sessionPath() = %q then %q, want stable fallback", p, got)
+	}
+	if _, err := os.Stat(p); !os.IsNotExist(err) {
+		t.Fatalf("fallback session file exists before save: %v", err)
+	}
+}
+
 func TestSessionAndBinarySessionShareOneFile(t *testing.T) {
 	state := t.TempDir()
 	t.Setenv("LRECON_STATE", state)
