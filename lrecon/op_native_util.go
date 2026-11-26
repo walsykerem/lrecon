@@ -768,9 +768,12 @@ var (
 	tempSessionPath string
 )
 
-func sessionPath() string {
+// sessionPathE resolves the session file path. It fails closed: when no
+// private location can be allocated it returns an error rather than a
+// predictable path in the working directory.
+func sessionPathE() (string, error) {
 	if p := strings.TrimSpace(os.Getenv("LRECON_SESSION")); p != "" {
-		return p
+		return p, nil
 	}
 	// LRECON_STATE already isolates every other lrecon state file. The
 	// reader's cursor has to live in the same sandbox: otherwise a run with an
@@ -778,7 +781,7 @@ func sessionPath() string {
 	// ~/.lrecon/session.json, and answers about a document the caller never
 	// opened.
 	if dir := strings.TrimSpace(os.Getenv("LRECON_STATE")); dir != "" {
-		return filepath.Join(dir, "session.json")
+		return filepath.Join(dir, "session.json"), nil
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -794,17 +797,31 @@ func sessionPath() string {
 			f.Close()
 			os.Remove(tempSessionPath)
 		})
-		if tempSessionPath != "" {
-			return tempSessionPath
+		if tempSessionPath == "" {
+			return "", errors.New("cannot allocate a private session path: no home directory and temp file creation failed")
 		}
-		return ".lrecon-session.json"
+		return tempSessionPath, nil
 	}
-	return filepath.Join(home, ".lrecon", "session.json")
+	return filepath.Join(home, ".lrecon", "session.json"), nil
+}
+
+// sessionPath returns the session file path for display purposes. Reads and
+// writes go through sessionPathE, which fails closed.
+func sessionPath() string {
+	p, err := sessionPathE()
+	if err != nil {
+		return ""
+	}
+	return p
 }
 
 func loadSession() (nativeSession, error) {
 	var s nativeSession
-	b, err := os.ReadFile(sessionPath())
+	p, err := sessionPathE()
+	if err != nil {
+		return s, err
+	}
+	b, err := os.ReadFile(p)
 	if errors.Is(err, os.ErrNotExist) {
 		return s, errNoSession
 	}
@@ -812,13 +829,16 @@ func loadSession() (nativeSession, error) {
 		return s, err
 	}
 	if err := json.Unmarshal(b, &s); err != nil {
-		return s, fmt.Errorf("%s: %v", sessionPath(), err)
+		return s, fmt.Errorf("%s: %v", p, err)
 	}
 	return s, nil
 }
 
 func saveSession(s nativeSession) error {
-	p := sessionPath()
+	p, err := sessionPathE()
+	if err != nil {
+		return err
+	}
 	if s.Kind == "" {
 		s.Kind = "lrecon.session/1"
 	}
