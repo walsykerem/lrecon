@@ -367,6 +367,16 @@ func TestCdpRunSessionRoundTrip(t *testing.T) {
 	}
 }
 
+// The URL in cdpRun must never point off-box, even when a caller bypasses webTarget.
+func TestCdpRunRefusesRemoteEndpoint(t *testing.T) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	_, err := cdpRun(ctx, webSpec{Endpoint: "8.8.8.8:9222", Mode: "list"})
+	if err == nil || !strings.Contains(err.Error(), "refusing") {
+		t.Fatalf("remote endpoint err = %v, want a loopback refusal", err)
+	}
+}
+
 // Negative path 1: the port answers, but not with a target list.
 func TestCdpRunNegativeListUnreachable(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

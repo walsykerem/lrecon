@@ -52,7 +52,12 @@ var cdpMaxMessage int64 = cdpMaxFrame
 // collect the events. Every decision about what to ask lives in the op.
 func cdpRun(ctx context.Context, spec webSpec) (webOut, error) {
 	var out webOut
-	base := "http://" + spec.Endpoint
+	// The CLI validates at webTarget; re-check at the transport so the URL below can only be loopback.
+	ep, _, err := webTarget(spec.Endpoint)
+	if err != nil {
+		return out, fmt.Errorf("cdp endpoint: %w", err)
+	}
+	base := "http://" + ep // NOSONAR S5332: DevTools is loopback-only plain HTTP/ws by design; webTarget refused remote hosts above.
 	body, err := cdpGet(ctx, base+"/json/list")
 	if err != nil {
 		return out, fmt.Errorf("/json/list: %w", err)
