@@ -27,7 +27,11 @@ func killGroup(pgid int) error {
 	if pgid <= 0 {
 		return fmt.Errorf("killGroup: invalid process group %d", pgid)
 	}
-	err := exec.Command("taskkill", "/T", "/F", "/PID", strconv.Itoa(pgid)).Run()
+	taskkill, err := exec.LookPath("taskkill")
+	if err != nil {
+		return err
+	}
+	err = exec.Command(taskkill, "/T", "/F", "/PID", strconv.Itoa(pgid)).Run()
 	if _, ok := errors.AsType[*exec.ExitError](err); ok {
 		return nil // taskkill exits 128 for a pid that is already gone
 	}
