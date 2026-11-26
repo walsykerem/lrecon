@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"syscall"
 	"unsafe"
@@ -78,6 +79,15 @@ const (
 func lockFile(f *os.File) (ok bool, err error) {
 	var ol syscall.Overlapped
 	r1, _, e := procLockFileEx.Call(uintptr(f.Fd()), lockfileExclusiveLock, 0, 1, 0, uintptr(unsafe.Pointer(&ol)))
+	if r1 != 0 {
+		return true, nil
+	}
+	if errors.Is(e, errorLockViolation) {
+		return false, nil
+	}
+	return false, e
+}
+ntptr(f.Fd()), lockfileExclusiveLock, 0, 1, 0, uintptr(unsafe.Pointer(&ol)))
 	if r1 != 0 {
 		return true, nil
 	}
