@@ -18,6 +18,7 @@ import (
 // targets independently of Ghidra; every hop the tool returns must be one of
 // them, in order.
 func TestTur7Bucket26CallPathDisasmHops(t *testing.T) {
+	requireRealGhidra(t)
 	dir := t.TempDir()
 	src := `package main
 
@@ -90,7 +91,6 @@ func main() { println(alpha(2)) }
 
 	t.Setenv("LRECON_FROM", "main.alpha")
 	t.Setenv("LRECON_TO", "main.gamma")
-	t.Setenv("LRECON_GHIDRA_TIMEOUT", "300s")
 	stdout, code := runCLI(t, "--json", "--op", "trace_call_path", bin)
 	if code != 0 {
 		t.Fatalf("trace_call_path exit %d, want 0; output:\n%s", code, stdout)

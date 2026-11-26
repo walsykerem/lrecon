@@ -58,15 +58,7 @@ func metaRealFuncAddr(t *testing.T, path string) string {
 // proves wiring; this proves the script compiles in Ghidra and that the values
 // it reports are the ones the project really stored.
 func TestMetaGhidraReal(t *testing.T) {
-	if testing.Short() {
-		t.Skip("real ghidra import")
-	}
-	if _, err := metaGhidraPath(); err != nil {
-		t.Skip("ghidra analyzeHeadless not installed")
-	}
-	// A cold real import outlasts the 50 s op budget, and this test asserts on
-	// stored values rather than on the timeout envelope.
-	t.Setenv("LRECON_GHIDRA_TIMEOUT", "300s")
+	requireRealGhidra(t)
 	target, addr := metaRealTarget(t)
 
 	// PRE, not PLATE: "PRE" was the mode the Go side asked for while Meta.java
